@@ -1,0 +1,32 @@
+- job:
+    name: upgrade_project
+    node: jenkins-slaves
+    concurrent: true
+    properties:
+      - throttle:
+          enabled: true
+          max-per-node: 1
+          max-total: 1
+          option: project
+    parameters:
+      - string:
+          name: ENVIRONMENT
+          default: 'production'
+          description: 'Environment to deploy to'
+    builders:
+      - shell: !include-raw: upgrade_project/builder_pre.sh
+      - shell: !include-raw: upgrade_project/builder_upgrade.sh
+    publishers:
+      - postbuildscript:
+          mark-unstable-if-failed: true
+          builders:
+            - role: SLAVE
+              build-on:
+                - FAILURE
+              build-steps:
+                - shell: !include-raw: upgrade_project/builder_fail.sh
+            - role: SLAVE
+              build-on:
+                - SUCCESS
+              build-steps:
+                - shell: !include-raw: upgrade_project/builder_post.sh
