@@ -1,5 +1,5 @@
 - job:
-    name: upgrade_project
+    name: upgrade_service
     node: jenkins-slaves
     concurrent: true
     properties:
@@ -14,8 +14,8 @@
           default: 'production'
           description: 'Environment to deploy to'
     builders:
-      - shell: !include-raw: upgrade_project/builder_pre.sh
-      - shell: !include-raw: upgrade_project/builder_upgrade.sh
+      - shell: !include-raw: upgrade_service/builder_pre.sh
+      - shell: !include-raw: upgrade_service/builder_main.sh
     publishers:
       - postbuildscript:
           mark-unstable-if-failed: true
@@ -24,9 +24,9 @@
               build-on:
                 - FAILURE
               build-steps:
-                - shell: !include-raw: upgrade_project/builder_fail.sh
+                - shell: !include-raw: upgrade_service/builder_fail.sh
             - role: SLAVE
               build-on:
                 - SUCCESS
               build-steps:
-                - shell: !include-raw: upgrade_project/builder_post.sh
+                - shell: !include-raw: upgrade_service/builder_post.sh

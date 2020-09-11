@@ -5,7 +5,11 @@ set -ex
 main() {
   echo "Initializing all clients for upgrading the environments"
 
-  cat <<'EOF' > "${WORKSPACE}/jenkins_jobs.ini"
+  virtualenv -p python3 "${WORKSPACE}/venv"
+  source "${WORKSPACE}/venv/bin/activate"
+  pip3 install jenkins-job-builder
+
+  cat << EOF > "${WORKSPACE}/jenkins_jobs.ini"
 [job_builder]
 ignore_cache=True
 keep_descriptions=False

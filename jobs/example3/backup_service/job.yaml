@@ -1,0 +1,82 @@
+- wrapper:
+    name: database-alpha-credentials
+    wrappers:
+      - credentials-binding:
+          - text:
+              credential-id: database-alpha-host
+              variable: DATABASE_HOST
+          - text:
+              credential-id: database-alpha-dbname
+              variable: DATABASE_NAME
+          - text:
+              credential-id: database-alpha-user
+              variable: DATABASE_USER
+          - text:
+              credential-id: database-alpha-password
+              variable: DATABASE_PASSWORD
+
+- wrapper:
+    name: database-beta-credentials
+    wrappers:
+      - credentials-binding:
+          - text:
+              credential-id: database-beta-host
+              variable: DATABASE_HOST
+          - text:
+              credential-id: database-beta-dbname
+              variable: DATABASE_NAME
+          - text:
+              credential-id: database-beta-user
+              variable: DATABASE_USER
+          - text:
+              credential-id: database-beta-password
+              variable: DATABASE_PASSWORD
+
+- job-template:
+    name: backup_service_{service}
+    node: jenkins-slaves
+    concurrent: true
+    properties:
+      - throttle:
+          enabled: true
+          max-per-node: 1
+          max-total: 1
+          option: project
+    parameters:
+      - hidden:
+          name: SERVICE
+          default: '{service}'
+          description: 'Service variable will be accessible from the shell script'
+      - string:
+          name: TIMEOUT
+          default: '60'
+          description: ''
+    triggers:
+      - timed: '@hourly'
+    wrappers:
+      - database-{service}-credentials
+    builders:
+      - shell: !include-raw-escape: backup_service/builder_pre.sh
+      - shell: !include-raw-escape: backup_service/builder_main.sh
+    publishers:
+      - postbuildscript:
+          mark-unstable-if-failed: true
+          builders:
+            - role: SLAVE
+              build-on:
+                - FAILURE
+              build-steps:
+                - shell: !include-raw-escape: backup_service/builder_fail.sh
+            - role: SLAVE
+              build-on:
+                - SUCCESS
+              build-steps:
+                - shell: !include-raw-escape: backup_service/builder_post.sh
+
+- project:
+    name: backup_service
+    service:
+      - alpha
+      - beta
+    jobs:
+      - backup_service_{service}

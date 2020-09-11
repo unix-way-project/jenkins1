@@ -12,6 +12,20 @@
               credential-id: jenkins-job-builder-jenkins-password
               variable: JENKINS_ADMIN_PASSWORD
 
+- scm:
+    name: jenkins-demo
+    scm:
+      - git:
+          url: https://github.com/unix-way-project/jenkins-demo.git
+          branches:
+            - master
+          basedir: jenkins-demo
+          clean:
+            before: true
+            after: false
+          wipe-workspace: true
+          timeout: 5
+
 - job:
     name: system_update_jenkins_jobs
     node: jenkins-slaves
@@ -25,21 +39,16 @@
     parameters:
       - string:
           name: EXAMPLE_DIRECTORY
-          default: 'example1'
+          default: 'example3'
           description: 'Select the example directory in the repository to work on'
+      - bool:
+          name: DELETE_OLD
+          default: false
+          description: "Should we delete old unused or manually created jobs"
     triggers:
       - timed: '@hourly'
     scm:
-      - git:
-          url: https://github.com/unix-way-project/jenkins-demo.git
-          branches:
-            - master
-          basedir: jenkins-demo
-          clean:
-            before: true
-            after: false
-          wipe-workspace: true
-          timeout: 5
+      - jenkins-demo
     wrappers:
       - jenkins-job-builder-credentials
     builders:
