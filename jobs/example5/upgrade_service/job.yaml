@@ -1,0 +1,45 @@
+
+- job-template:
+    name: upgrade_service_{service}
+    node: jenkins-slaves
+    concurrent: true
+    properties:
+      - throttle:
+          enabled: true
+          max-per-node: 1
+          max-total: 1
+          option: project
+    parameters:
+      - hidden:
+          name: SERVICE
+          default: '{service}'
+          description: 'Service variable will be accessible from the shell script'
+      - string:
+          name: VERSION
+          default: ''
+          description: 'Version of the service we are working on'
+    builders:
+      - shell: !include-raw-escape: builder_pre.sh
+      - shell: !include-raw-escape: builder_main.sh
+    publishers:
+      - postbuildscript:
+          mark-unstable-if-failed: true
+          builders:
+            - role: SLAVE
+              build-on:
+                - FAILURE
+              build-steps:
+                - shell: !include-raw-escape: builder_fail.sh
+            - role: SLAVE
+              build-on:
+                - SUCCESS
+              build-steps:
+                - shell: !include-raw-escape: builder_post.sh
+
+- project:
+    name: upgrade_service
+    service:
+      - alpha
+      - beta
+    jobs:
+      - upgrade_service_{service}

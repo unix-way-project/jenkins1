@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ex
+set -e
 
 main() {
   echo "Initializing all clients for upgrading the environments"

@@ -52,8 +52,8 @@
     wrappers:
       - jenkins-job-builder-credentials
     builders:
-      - shell: !include-raw: system_update_jenkins_jobs/builder_pre.sh
-      - shell: !include-raw: system_update_jenkins_jobs/builder_main.sh
+      - shell: !include-raw: builder_pre.sh
+      - shell: !include-raw: builder_main.sh
     publishers:
       - postbuildscript:
           mark-unstable-if-failed: true
@@ -62,9 +62,9 @@
               build-on:
                 - FAILURE
               build-steps:
-                - shell: !include-raw: system_update_jenkins_jobs/builder_fail.sh
+                - shell: !include-raw: builder_fail.sh
             - role: SLAVE
               build-on:
                 - SUCCESS
               build-steps:
-                - shell: !include-raw: system_update_jenkins_jobs/builder_post.sh
+                - shell: !include-raw: builder_post.sh

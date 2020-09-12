@@ -1,0 +1,70 @@
+- wrapper:
+    name: jenkins-job-builder-credentials
+    wrappers:
+      - credentials-binding:
+          - text:
+              credential-id: jenkins-job-builder-jenkins-url
+              variable: JENKINS_URL
+          - text:
+              credential-id: jenkins-job-builder-jenkins-user
+              variable: JENKINS_ADMIN_USER
+          - text:
+              credential-id: jenkins-job-builder-jenkins-password
+              variable: JENKINS_ADMIN_PASSWORD
+
+- scm:
+    name: jenkins-demo
+    scm:
+      - git:
+          url: https://github.com/unix-way-project/jenkins-demo.git
+          branches:
+            - master
+          basedir: jenkins-demo
+          clean:
+            before: true
+            after: false
+          wipe-workspace: true
+          timeout: 5
+
+- job:
+    name: system_update_jenkins_jobs
+    node: jenkins-slaves
+    concurrent: true
+    properties:
+      - throttle:
+          enabled: true
+          max-per-node: 1
+          max-total: 1
+          option: project
+    parameters:
+      - string:
+          name: EXAMPLE_DIRECTORY
+          default: 'example4'
+          description: 'Select the example directory in the repository to work on'
+      - bool:
+          name: DELETE_OLD
+          default: false
+          description: "Should we delete old unused or manually created jobs"
+    triggers:
+      - timed: '@hourly'
+    scm:
+      - jenkins-demo
+    wrappers:
+      - jenkins-job-builder-credentials
+    builders:
+      - shell: !include-raw: builder_pre.sh
+      - shell: !include-raw: builder_main.sh
+    publishers:
+      - postbuildscript:
+          mark-unstable-if-failed: true
+          builders:
+            - role: SLAVE
+              build-on:
+                - FAILURE
+              build-steps:
+                - shell: !include-raw: builder_fail.sh
+            - role: SLAVE
+              build-on:
+                - SUCCESS
+              build-steps:
+                - shell: !include-raw: builder_post.sh

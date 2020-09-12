@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ex
+set -e
 
 main() {
   echo "Here we use environment variables DATABASE_HOST, DATABASE_NAME,"

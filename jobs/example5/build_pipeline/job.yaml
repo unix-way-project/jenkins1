@@ -1,0 +1,24 @@
+- job-template:
+    name: 'build_pipeline_service_{service}'
+    project-type: pipeline
+    node: jenkins-slaves
+    properties:
+      - throttle:
+          enabled: true
+          max-per-node: 1
+          max-total: 1
+          option: project
+    parameters:
+      - hidden:
+          name: SERVICE
+          default: '{service}'
+          description: 'Service variable will be accessible from the shell script'
+    dsl: !include-raw-escape:  builder_main.groovy
+
+- project:
+    name: build_pipeline_service
+    service:
+      - alpha
+      - beta
+    jobs:
+      - build_pipeline_service_{service}

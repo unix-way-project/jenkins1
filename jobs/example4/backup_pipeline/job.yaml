@@ -1,0 +1,18 @@
+- job:
+    name: 'backup_pipeline'
+    project-type: pipeline
+    node: jenkins-slave
+    triggers:
+      - timed: '@hourly'
+    properties:
+      - throttle:
+          enabled: true
+          max-per-node: 1
+          max-total: 1
+          option: project
+    parameters:
+      - string:
+          name: TIMEOUT
+          default: '60'
+          description: ''
+    dsl: !include-raw:  builder_main.groovy

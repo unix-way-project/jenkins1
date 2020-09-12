@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ex
+set -e
 
 main() {
     echo "Failed to update Jenkins Jobs from the source"
