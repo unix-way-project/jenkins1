@@ -3,7 +3,7 @@
 set -e
 
 main() {
-  echo "Initialising for running integration tests"
+  echo "Initializing for running integration tests"
 }
 
 main

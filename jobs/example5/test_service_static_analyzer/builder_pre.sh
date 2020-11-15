@@ -3,7 +3,7 @@
 set -e
 
 main() {
-  echo "Initialising our Static Analizer tool"
+  echo "Initializing our Static Analizer tool"
 }
 
 main

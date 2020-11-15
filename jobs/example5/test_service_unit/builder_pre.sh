@@ -3,7 +3,7 @@
 set -e
 
 main() {
-  echo "Initialising our Unit Testing framework"
+  echo "Initializing our Unit Testing framework"
 }
 
 main

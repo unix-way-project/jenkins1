@@ -13,13 +13,13 @@
               variable: JENKINS_ADMIN_PASSWORD
 
 - scm:
-    name: jenkins-demo
+    name: jenkins-repository
     scm:
       - git:
-          url: https://github.com/unix-way-project/jenkins-demo.git
+          url: https://github.com/unix-way-project/jenkins1.git
           branches:
             - master
-          basedir: jenkins-demo
+          basedir: jenkins-repository
           clean:
             before: true
             after: false
@@ -48,7 +48,7 @@
     triggers:
       - timed: '@hourly'
     scm:
-      - jenkins-demo
+      - jenkins-repository
     wrappers:
       - jenkins-job-builder-credentials
     builders:

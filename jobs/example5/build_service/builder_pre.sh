@@ -3,7 +3,7 @@
 set -e
 
 main() {
-  echo "Initialising the compilling mechanism"
+  echo "Initializing the compiling mechanism"
 }
 
 main

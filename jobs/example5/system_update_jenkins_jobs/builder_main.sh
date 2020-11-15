@@ -16,7 +16,7 @@ main() {
       exit 1
   fi
 
-  pushd "${WORKSPACE}/jenkins-demo/jobs/${EXAMPLE_DIRECTORY}"
+  pushd "${WORKSPACE}/jenkins-repository/jobs/${EXAMPLE_DIRECTORY}"
   echo "Starting to update the jenkins jobs from the directory $(pwd)"
   jenkins-jobs --conf "${WORKSPACE}/jenkins_jobs.ini" update ${DELETE_OLD_MODE} .
   popd

@@ -10,6 +10,10 @@
           max-total: 1
           option: project
     parameters:
+      - random-string:
+          name: RANDOM
+          description: "To avoid merging two similar jobs in queue in to one"
+          failed-validation-message: "Your input string is invalid"
       - hidden:
           name: TEST
           default: '{test}'
