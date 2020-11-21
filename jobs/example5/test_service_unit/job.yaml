@@ -1,7 +1,7 @@
 
 - job-template:
     name: test_service_{service}_unit
-    node: jenkins-slaves
+    node: jenkins-nodes
     concurrent: true
     properties:
       - throttle:

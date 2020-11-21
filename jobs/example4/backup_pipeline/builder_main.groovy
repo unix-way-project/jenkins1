@@ -20,6 +20,6 @@ def backupAll() {
     })
 }
 
-node("jenkins-slaves") {
+node("jenkins-nodes") {
     backupAll()
 }

@@ -28,7 +28,7 @@
 
 - job:
     name: system_update_jenkins_jobs
-    node: jenkins-slaves
+    node: jenkins-nodes
     concurrent: true
     properties:
       - throttle:

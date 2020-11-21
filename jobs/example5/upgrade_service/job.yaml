@@ -1,7 +1,7 @@
 
 - job-template:
     name: upgrade_service_{service}
-    node: jenkins-slaves
+    node: jenkins-nodes
     concurrent: true
     properties:
       - throttle:

@@ -95,7 +95,7 @@ def releaseService(String version) {
   }
 }
 
-node("jenkins-slaves") {
+node("jenkins-nodes") {
     String version = BUILD_NUMBER
 
     testServiceStaticAnalyzer()

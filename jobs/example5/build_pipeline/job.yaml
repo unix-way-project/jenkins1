@@ -1,7 +1,7 @@
 - job-template:
     name: 'build_pipeline_service_{service}'
     project-type: pipeline
-    node: jenkins-slaves
+    node: jenkins-nodes
     properties:
       - throttle:
           enabled: true
